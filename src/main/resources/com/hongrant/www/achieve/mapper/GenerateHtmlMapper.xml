@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hongrant.www.achieve.mapper.GenerateHtmlMapper">
+
+	<select id="getSubjectIdByName" resultType="String">
+		SELECT DISTINCT name as name from question_subject WHERE subject_id = #{subjectId}
+	</select>
+	
+	<select id="getGradeIdByName" resultType="String">
+		SELECT name as name from question_grade WHERE stage_id = #{gradeId}
+	</select>
+	
+	<select id="getTopicListByList" resultType="Map">
+		SELECT DISTINCT qt.name as topicName,  qt.topic_id as topicId 
+		FROM question_topic qt INNER JOIN question_bank qb
+		WHERE qb.topic_id=qt.topic_id AND qb.question_id in
+		<foreach collection="list" separator=","
+			item="item" open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getQuestionListByListAndTopicId" resultType="Map">
+		SELECT question_id as questionId,title as title,options as options,sub_questions as subQuestions,
+		answer as answer,analysis as analysis,centre as centre,chapter_id as chapterId,
+		topic_id as topicId,type_id as typeId,diff_id as diffId 
+		FROM question_bank WHERE topic_id = #{topicId} and question_id in
+		<foreach collection="list" separator=","
+			item="item" open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getQuestionListByList" resultType="Map">
+		SELECT question_id as questionId,title as title,options as options,sub_questions as subQuestions,
+		answer as answer,analysis as analysis,centre as centre,chapter_id as chapterId,
+		topic_id as topicId,type_id as typeId,diff_id as diffId 
+		FROM question_bank WHERE question_id in
+		<foreach collection="list" separator=","
+			item="item" open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	
+</mapper>
